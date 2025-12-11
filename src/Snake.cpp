@@ -1,5 +1,5 @@
-#include "../include/Snake.hpp" // Nota: subimos un nivel y entramos a include
-#include <algorithm> // Para std::min
+#include "../include/Snake.hpp"
+#include <algorithm> 
 
 Snake::Snake(int blockSize) : m_blockSize(blockSize) {
     // Inicializamos con cuerpo de 3 piezas
@@ -14,7 +14,9 @@ Snake::Snake(int blockSize) : m_blockSize(blockSize) {
 Snake::~Snake() {}
 
 void Snake::handleInput() {
-    // Lógica para evitar giro de 180 grados instantáneo
+    // Evitar giro de 180 grados y múltiples giros en un frame
+    if (m_hasMoved) return; 
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && m_direction.y == 0) {
         m_direction = sf::Vector2i(0, -1);
         m_hasMoved = true;
@@ -31,23 +33,39 @@ void Snake::handleInput() {
 }
 
 void Snake::update() {
-    // Algoritmo de oruga: mover cola a la posición anterior
+    if (m_body.empty()) return;
+
+    // Mover cuerpo
     for (int i = m_body.size() - 1; i > 0; --i) {
         m_body[i] = m_body[i - 1];
     }
+    // Mover cabeza
     m_body[0] += m_direction;
-    m_hasMoved = false;
+    m_hasMoved = false; // Permitir nuevo input para el siguiente frame
 }
 
 void Snake::grow() {
-    m_body.push_back(m_body.back());
+    if (!m_body.empty()) {
+        m_body.push_back(m_body.back());
+    }
 }
 
 bool Snake::checkCollision() {
-    // Chocar con su propio cuerpo
+    if (m_body.empty()) return false;
+
+    // 1. Chocar con su propio cuerpo
     for (size_t i = 1; i < m_body.size(); ++i) {
         if (m_body[0] == m_body[i]) return true;
     }
+
+    // 2. Chocar con PAREDES (Asumiendo ventana 800x600 y bloque 20)
+    // 800/20 = 40 columnas (0 a 39)
+    // 600/20 = 30 filas (0 a 29)
+    if (m_body[0].x < 0 || m_body[0].x >= 40 || 
+        m_body[0].y < 0 || m_body[0].y >= 30) {
+        return true;
+    }
+
     return false;
 }
 
@@ -57,9 +75,9 @@ void Snake::render(sf::RenderWindow& window) {
     for (size_t i = 0; i < m_body.size(); ++i) {
         rect.setPosition(m_body[i].x * m_blockSize, m_body[i].y * m_blockSize);
         
-        // Efecto visual: degradado de verde
-        if (i == 0) rect.setFillColor(sf::Color::Green);
+        if (i == 0) rect.setFillColor(sf::Color::Green); // Cabeza
         else {
+            // Degradado visual
             int alpha = 255 - (std::min((int)i * 10, 200));
             rect.setFillColor(sf::Color(0, alpha, 0));
         }

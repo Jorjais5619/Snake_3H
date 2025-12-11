@@ -1,6 +1,22 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <algorithm>
 #include "Snake.hpp"
+
+struct ScoreEntry {
+    std::string name;
+    int score;
+};
+
+enum GameState {
+    MENU,
+    ENTER_NAME,
+    PLAYING,
+    GAME_OVER
+};
 
 class Game {
 public:
@@ -11,13 +27,34 @@ private:
     void processEvents();
     void update(sf::Time deltaTime);
     void render();
+    
+    // Funciones del sistema
+    void loadScores();
+    void saveScore();
+    void updateHighScores();
     void spawnFood();
 
-    sf::RenderWindow m_window;
-    Snake m_snake;
-    sf::Vector2i m_food;
-    int m_blockSize;
+    sf::RenderWindow mWindow;
+    Snake mSnake;
     
-    sf::Time m_timePerFrame;
-    sf::Time m_timeSinceLastMove;
+    GameState mState;
+    sf::Time mTimePerFrame;
+    
+    // Recursos
+    sf::Font mFont;
+    sf::Text mTitleText;
+    sf::Text mScoreText;
+    sf::Text mInstructionsText;
+    sf::Text mHighScoreText;
+
+    // --- NUEVO: Variables para el fondo del menú ---
+    sf::Texture mMenuBackgroundTexture;
+    sf::Sprite mMenuBackgroundSprite;
+    
+    // Datos juego
+    int mScore;
+    std::string mPlayerName;
+    std::vector<ScoreEntry> mHighScores;
+    
+    sf::RectangleShape mFood;
 };

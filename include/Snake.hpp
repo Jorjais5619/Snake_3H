@@ -4,20 +4,22 @@
 
 class Snake {
 public:
-    Snake(int blockSize);
+    Snake(int blocksize);
     ~Snake();
 
     void handleInput();
     void update();
     void render(sf::RenderWindow& window);
-    
+
     void grow();
     bool checkCollision();
-    sf::Vector2i getHeadPosition() const { return m_body[0]; }
+    sf::Vector2i getHeadPosition() const { return m_body.empty() ? sf::Vector2i(0,0) : m_body[0]; }
 
 private:
     int m_blockSize;
-    std::vector<sf::Vector2i> m_body; // El cuerpo
-    sf::Vector2i m_direction;         // Dirección actual
-    bool m_hasMoved;                  // Control de input
+    std::vector<sf::Vector2i> m_body; 
+    
+    // Variables de movimiento
+    sf::Vector2i m_direction; 
+    bool m_hasMoved;
 };
