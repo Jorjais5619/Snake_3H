@@ -4,7 +4,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Iinclude
 
 # Librerías (Incluimos Box2D por si lo usas en el futuro, aunque Snake no lo usa hoy)
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lbox2d
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
 SRC_DIR = src
 OBJ_DIR = bin/obj
@@ -23,6 +23,9 @@ $(TARGET): $(OBJECTS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+run : $(TARGET)
+	./$(TARGET)
 
 directories:
 	mkdir -p $(OBJ_DIR)
