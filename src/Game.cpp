@@ -4,7 +4,7 @@
 // Constructor
 Game::Game() 
 : mWindow(sf::VideoMode(800, 600), "Snake Game - C++ SFML")
-, mSnake(20) // Tamaño del bloque 20px
+, mSnake(20)
 , mState(MENU)
 , mScore(0)
 , mPlayerName("")
@@ -17,46 +17,72 @@ Game::Game()
         exit(1);
     }
 
-    // --- 2. CARGA DE FONDO DEL MENÚ ---
+    // --- 2. CARGA DE FONDO DEL MENÚ (Foto_Menu.png) ---
     if (!mMenuBackgroundTexture.loadFromFile("assets/Foto_Menu.png")) {
-        std::cerr << "ADVERTENCIA: No se encontro assets/Foto_Menu.png. El menu sera negro." << std::endl;
+        std::cerr << "ADVERTENCIA: No se encontro assets/Foto_Menu.png" << std::endl;
     } else {
         mMenuBackgroundSprite.setTexture(mMenuBackgroundTexture);
-        
-        // Ajustar imagen al tamaño de la ventana (800x600)
-        sf::Vector2u textureSize = mMenuBackgroundTexture.getSize();
-        float scaleX = 800.0f / textureSize.x;
-        float scaleY = 600.0f / textureSize.y;
-        mMenuBackgroundSprite.setScale(scaleX, scaleY);
-
-        // Opcional: Oscurecer un poco la imagen para que se lea el texto
+        sf::Vector2u size = mMenuBackgroundTexture.getSize();
+        mMenuBackgroundSprite.setScale(800.0f / size.x, 600.0f / size.y);
         mMenuBackgroundSprite.setColor(sf::Color(220, 220, 220, 255));
     }
 
-    // Configuración de textos
+    // --- 3. CARGA DE FONDO DEL JUEGO (Fondo_Juego.png) ---
+    if (!mGameBackgroundTexture.loadFromFile("assets/Fondo_Juego.png")) {
+        std::cerr << "ADVERTENCIA: No se encontro assets/Fondo_Juego.png" << std::endl;
+    } else {
+        mGameBackgroundSprite.setTexture(mGameBackgroundTexture);
+        sf::Vector2u gameBgSize = mGameBackgroundTexture.getSize();
+        mGameBackgroundSprite.setScale(800.0f / gameBgSize.x, 600.0f / gameBgSize.y);
+    }
+
+    // --- 4. NUEVO: CARGA DE FONDO "INGRESAR NOMBRE" (Imagen1.png) ---
+    if (!mEnterNameTexture.loadFromFile("assets/Imagen1.png")) {
+        std::cerr << "ADVERTENCIA: No se encontro assets/Imagen1.png" << std::endl;
+    } else {
+        mEnterNameSprite.setTexture(mEnterNameTexture);
+        sf::Vector2u nameBgSize = mEnterNameTexture.getSize();
+        mEnterNameSprite.setScale(800.0f / nameBgSize.x, 600.0f / nameBgSize.y);
+        // Oscurecemos un poco para que se lea el nombre que escribes
+        mEnterNameSprite.setColor(sf::Color(200, 200, 200, 255));
+    }
+
+    // --- 5. NUEVO: CARGA DE FONDO "GAME OVER" (Game_Over.png) ---
+    if (!mGameOverTexture.loadFromFile("assets/Game_Over.png")) {
+        std::cerr << "ADVERTENCIA: No se encontro assets/Game_Over.png" << std::endl;
+    } else {
+        mGameOverSprite.setTexture(mGameOverTexture);
+        sf::Vector2u overBgSize = mGameOverTexture.getSize();
+        mGameOverSprite.setScale(800.0f / overBgSize.x, 600.0f / overBgSize.y);
+    }
+
+    // Configuración de textos (Estilos generales)
     mTitleText.setFont(mFont);
     mTitleText.setCharacterSize(50);
-    mTitleText.setFillColor(sf::Color::White); // Blanco para resaltar sobre la imagen
+    mTitleText.setFillColor(sf::Color::White);
     mTitleText.setOutlineColor(sf::Color::Black);
-    mTitleText.setOutlineThickness(2);
+    mTitleText.setOutlineThickness(3); // Borde más grueso para legibilidad
     mTitleText.setPosition(220, 50);
 
     mInstructionsText.setFont(mFont);
     mInstructionsText.setCharacterSize(22);
     mInstructionsText.setFillColor(sf::Color::White);
     mInstructionsText.setOutlineColor(sf::Color::Black);
-    mInstructionsText.setOutlineThickness(1);
+    mInstructionsText.setOutlineThickness(2);
     mInstructionsText.setPosition(200, 450);
 
     mScoreText.setFont(mFont);
     mScoreText.setCharacterSize(20);
+    mScoreText.setFillColor(sf::Color::White); 
+    mScoreText.setOutlineColor(sf::Color::Black);
+    mScoreText.setOutlineThickness(1);
     mScoreText.setPosition(10, 10);
 
     mHighScoreText.setFont(mFont);
     mHighScoreText.setCharacterSize(24);
     mHighScoreText.setFillColor(sf::Color::Yellow);
     mHighScoreText.setOutlineColor(sf::Color::Black);
-    mHighScoreText.setOutlineThickness(1);
+    mHighScoreText.setOutlineThickness(2);
     mHighScoreText.setPosition(250, 150);
 
     mTimePerFrame = sf::seconds(0.15f);
@@ -89,18 +115,17 @@ void Game::run() {
 void Game::processEvents() {
     sf::Event event;
     while (mWindow.pollEvent(event)) {
-        if (event.type == sf::Event::Closed)
-            mWindow.close();
-
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-             mWindow.close();
+        if (event.type == sf::Event::Closed) mWindow.close();
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) mWindow.close();
 
         if (mState == ENTER_NAME && event.type == sf::Event::TextEntered) {
-            if (event.text.unicode == 8) { // Backspace
+            if (event.text.unicode == 8) { 
                 if (!mPlayerName.empty()) mPlayerName.pop_back();
             }
-            else if (event.text.unicode == 13) { // Enter
-                if (!mPlayerName.empty()) mState = PLAYING;
+            else if (event.text.unicode == 13) { 
+                if (!mPlayerName.empty()) {
+                    mState = PLAYING;
+                }
             }
             else if (event.text.unicode < 128 && event.text.unicode > 31) {
                 if (mPlayerName.size() < 10) mPlayerName += static_cast<char>(event.text.unicode);
@@ -125,10 +150,7 @@ void Game::processEvents() {
             }
         }
     }
-    
-    if (mState == PLAYING) {
-        mSnake.handleInput();
-    }
+    if (mState == PLAYING) mSnake.handleInput();
 }
 
 void Game::update(sf::Time deltaTime) {
@@ -156,10 +178,7 @@ void Game::render() {
     mWindow.clear();
 
     if (mState == MENU) {
-        // --- DIBUJAR FONDO PRIMERO ---
-        if (mMenuBackgroundSprite.getTexture()) {
-            mWindow.draw(mMenuBackgroundSprite);
-        }
+        if (mMenuBackgroundSprite.getTexture()) mWindow.draw(mMenuBackgroundSprite);
 
         mTitleText.setString("SNAKE GAME");
         mWindow.draw(mTitleText);
@@ -176,7 +195,11 @@ void Game::render() {
         mWindow.draw(mInstructionsText);
     }
     else if (mState == ENTER_NAME) {
-        // En esta pantalla dejamos fondo negro para claridad, o puedes copiar el código del sprite si quieres fondo aquí también
+        // --- DIBUJAR FONDO: IMAGEN1 ---
+        if (mEnterNameSprite.getTexture()) {
+            mWindow.draw(mEnterNameSprite);
+        }
+
         mTitleText.setString("Ingresa tu Nombre:");
         mWindow.draw(mTitleText);
         
@@ -184,6 +207,11 @@ void Game::render() {
         mWindow.draw(mInstructionsText);
     }
     else if (mState == PLAYING) {
+        // --- DIBUJAR FONDO: JUEGO ---
+        if (mGameBackgroundSprite.getTexture()) {
+            mWindow.draw(mGameBackgroundSprite);
+        }
+
         mSnake.render(mWindow);
         mWindow.draw(mFood);
         
@@ -191,6 +219,14 @@ void Game::render() {
         mWindow.draw(mScoreText);
     }
     else if (mState == GAME_OVER) {
+        // --- DIBUJAR FONDO: GAME OVER ---
+        if (mGameOverSprite.getTexture()) {
+            mWindow.draw(mGameOverSprite);
+        } else {
+            // Si falló la carga, dejamos un color rojizo tenue de fondo
+            mWindow.clear(sf::Color(50, 0, 0));
+        }
+
         mTitleText.setString("GAME OVER");
         mWindow.draw(mTitleText);
 

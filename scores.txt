@@ -1,2 +1,3 @@
+lulu 160
 Jorge 70
-soto 0
+leon 70

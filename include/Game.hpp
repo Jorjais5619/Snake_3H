@@ -40,16 +40,25 @@ private:
     GameState mState;
     sf::Time mTimePerFrame;
     
-    // Recursos
+    // Recursos de Texto
     sf::Font mFont;
     sf::Text mTitleText;
     sf::Text mScoreText;
     sf::Text mInstructionsText;
     sf::Text mHighScoreText;
 
-    // --- NUEVO: Variables para el fondo del menú ---
-    sf::Texture mMenuBackgroundTexture;
+    // --- IMÁGENES DE FONDO ---
+    sf::Texture mMenuBackgroundTexture;  // Menú Principal
     sf::Sprite mMenuBackgroundSprite;
+
+    sf::Texture mGameBackgroundTexture;  // Juego
+    sf::Sprite mGameBackgroundSprite;
+
+    sf::Texture mEnterNameTexture;       // NUEVO: Pantalla Ingresar Nombre (Imagen1.png)
+    sf::Sprite mEnterNameSprite;
+
+    sf::Texture mGameOverTexture;        // NUEVO: Pantalla Game Over (Game_Over.png)
+    sf::Sprite mGameOverSprite;
     
     // Datos juego
     int mScore;
