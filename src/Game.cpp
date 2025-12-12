@@ -56,31 +56,31 @@ Game::Game()
         mGameOverSprite.setScale(800.0f / overBgSize.x, 600.0f / overBgSize.y);
     }
 
-    // Configuración de textos (Estilos generales)
+// --- MEJORA VISUAL 
     mTitleText.setFont(mFont);
-    mTitleText.setCharacterSize(50);
-    mTitleText.setFillColor(sf::Color::White);
-    mTitleText.setOutlineColor(sf::Color::Black);
-    mTitleText.setOutlineThickness(3); // Borde más grueso para legibilidad
-    mTitleText.setPosition(220, 50);
+    mTitleText.setCharacterSize(52); // Ligeramente más grande
+    mTitleText.setFillColor(sf::Color(255, 255, 255)); // Blanco puro
+    mTitleText.setOutlineColor(sf::Color(0, 0, 0)); // Borde negro
+    mTitleText.setOutlineThickness(4); // Borde más grueso para resaltar sobre el fondo
+    mTitleText.setPosition(220, 40);   // Subimos un poco el título
 
     mInstructionsText.setFont(mFont);
-    mInstructionsText.setCharacterSize(22);
-    mInstructionsText.setFillColor(sf::Color::White);
+    mInstructionsText.setCharacterSize(20); // Texto más compacto
+    mInstructionsText.setFillColor(sf::Color(240, 240, 240)); // Blanco humo
     mInstructionsText.setOutlineColor(sf::Color::Black);
     mInstructionsText.setOutlineThickness(2);
-    mInstructionsText.setPosition(200, 450);
+    mInstructionsText.setPosition(200, 460);
 
     mScoreText.setFont(mFont);
-    mScoreText.setCharacterSize(20);
-    mScoreText.setFillColor(sf::Color::White); 
+    mScoreText.setCharacterSize(22);
+    mScoreText.setFillColor(sf::Color(0, 255, 255)); 
     mScoreText.setOutlineColor(sf::Color::Black);
-    mScoreText.setOutlineThickness(1);
-    mScoreText.setPosition(10, 10);
+    mScoreText.setOutlineThickness(2);
+    mScoreText.setPosition(15, 15);
 
     mHighScoreText.setFont(mFont);
     mHighScoreText.setCharacterSize(24);
-    mHighScoreText.setFillColor(sf::Color::Yellow);
+    mHighScoreText.setFillColor(sf::Color(255, 215, 0));
     mHighScoreText.setOutlineColor(sf::Color::Black);
     mHighScoreText.setOutlineThickness(2);
     mHighScoreText.setPosition(250, 150);
@@ -88,7 +88,9 @@ Game::Game()
     mTimePerFrame = sf::seconds(0.15f);
 
     mFood.setSize(sf::Vector2f(20, 20));
-    mFood.setFillColor(sf::Color::Red);
+    mFood.setFillColor(sf::Color(255, 69, 0)); 
+    mFood.setOutlineColor(sf::Color(255, 255, 255)); 
+    mFood.setOutlineThickness(1);
     spawnFood();
 
     loadScores();
@@ -180,7 +182,7 @@ void Game::render() {
     if (mState == MENU) {
         if (mMenuBackgroundSprite.getTexture()) mWindow.draw(mMenuBackgroundSprite);
 
-        mTitleText.setString("SNAKE GAME");
+        mTitleText.setString("S N A K E   G A M E"); 
         mWindow.draw(mTitleText);
 
         std::string scoresStr = "TOP 3 JUGADORES:\n";
