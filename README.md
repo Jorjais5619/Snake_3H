@@ -31,12 +31,14 @@ Recolectar la mayor cantidad de manzanas (Cian) para crecer y aumentar tu puntaj
 * **Compilador:** MinGW / g++
 
 ## 📜 Créditos
-* **Música:** Los Cafres - Tus Ojos.
-* **Fuentes:** Arcade Font (TTF).
-* **Inspiración:** Juegos de consola de los años 80.
----
+* **Música de fondo:** "Bit Shift" por Kevin MacLeod (incompetech.com).
+* **Licencia:** Licensed under Creative Commons: By Attribution 4.0 License.
+  http://creativecommons.org/licenses/by/4.0/
+* **Arte Visual:** Fondos temáticos de Batman y Spider-Man.
+* **Desarrollo:** Emilio Soto Macias (@ItsEmilianoSM) y Jorge Alberto Velazquez Ventura (@Jorjais5619).
 
 ## ⚖️ Aviso Legal (Copyright Disclaimer)
 Este proyecto ha sido creado únicamente con **fines educativos y sin fines de lucro**. 
-* **Música:** "Tus Ojos" es propiedad de **Los Cafres**. No se pretende infringir los derechos de autor. Todos los derechos pertenecen a sus respectivos dueños.
-* **Imágenes:** Los personajes de Batman y Spider-Man son propiedad de **DC Comics** y **Marvel/Disney** respectivamente.
+
+* **Música:** La pista de audio utilizada es **"Bit Shift"** de **Kevin MacLeod** (incompetech.com), bajo la licencia [Creative Commons: By Attribution 4.0](http://creativecommons.org/licenses/by/4.0/). No se pretende infringir derechos de autor.
+* **Imágenes:** Los personajes de Batman y Spider-Man son marcas registradas propiedad de **DC Comics** y **Marvel/Disney** respectivamente. Su uso en este proyecto es meramente ilustrativo para fines académicos.

@@ -16,7 +16,7 @@ Game::Game()
     }
 
     // --- 2. MÚSICA ---
-    if (mMusic.openFromFile("assets/music/tus_ojos.ogg")) {
+    if (mMusic.openFromFile("assets/music/rolita.ogg")) {
         mMusic.setLoop(true);
         mMusic.setVolume(40);
         mMusic.play();
