@@ -1,7 +1,3 @@
-# Compilados y objetos
-bin/obj/
-*.o
-*.exe
 
 # Archivos de VS Code
 .vscode/
