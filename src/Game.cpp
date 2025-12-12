@@ -24,19 +24,19 @@ Game::Game()
 
     // --- 3. CARGA DE IMÁGENES (ASEGÚRATE QUE EL FORMATO .jpeg O .png SEA EL CORRECTO) ---
     // Si tus archivos son .png, cambia ".jpeg" por ".png" en las líneas de abajo:
-    mMenuBackgroundTexture.loadFromFile("assets/Foto_Menu.jpeg");
+    mMenuBackgroundTexture.loadFromFile("assets/images/Foto_Menu.jpeg");
     mMenuBackgroundSprite.setTexture(mMenuBackgroundTexture);
     mMenuBackgroundSprite.setScale(800.0f / mMenuBackgroundTexture.getSize().x, 600.0f / mMenuBackgroundTexture.getSize().y);
 
-    mGameBackgroundTexture.loadFromFile("assets/Fondo_Juego.jpeg");
+    mGameBackgroundTexture.loadFromFile("assets/images/Fondo_Juego.jpeg");
     mGameBackgroundSprite.setTexture(mGameBackgroundTexture);
     mGameBackgroundSprite.setScale(800.0f / mGameBackgroundTexture.getSize().x, 600.0f / mGameBackgroundTexture.getSize().y);
 
-    mEnterNameTexture.loadFromFile("assets/Imagen1.jpeg");
+    mEnterNameTexture.loadFromFile("assets/images/Imagen1.jpeg");
     mEnterNameSprite.setTexture(mEnterNameTexture);
     mEnterNameSprite.setScale(800.0f / mEnterNameTexture.getSize().x, 600.0f / mEnterNameTexture.getSize().y);
 
-    mGameOverTexture.loadFromFile("assets/Game_Over.jpeg");
+    mGameOverTexture.loadFromFile("assets/images/Game_Over.jpeg");
     mGameOverSprite.setTexture(mGameOverTexture);
     mGameOverSprite.setScale(800.0f / mGameOverTexture.getSize().x, 600.0f / mGameOverTexture.getSize().y);
 
