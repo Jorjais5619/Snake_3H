@@ -1,83 +1,70 @@
 #include "../include/Game.hpp"
 #include <iostream>
+#include <SFML/Audio.hpp>
+#include <algorithm>
+#include <fstream>
 
-// Constructor
 Game::Game()
-: mWindow(sf::VideoMode(800, 600), "Snake Game - C++ SFML")
-, mSnake(20)
-, mState(MENU)
-, mScore(0)
-, mPlayerName("")
+: mWindow(sf::VideoMode(800, 600), "SNAKE MASTER - Arcade Edition")
+, mSnake(20), mState(MENU), mScore(0), mPlayerName("")
 {
     mWindow.setFramerateLimit(60);
 
-    // --- 1. CARGA DE FUENTE ARCADE ---
+    // --- 1. FUENTE ---
     if (!mFont.loadFromFile("assets/fonts/Arcade.ttf")) {
-        std::cerr << "ADVERTENCIA: No se encontro Arcade.ttf, usando Arial." << std::endl;
-        mFont.loadFromFile("assets/fonts/Arial.ttf");
+        mFont.loadFromFile("C:/Windows/Fonts/arial.ttf");
     }
 
-    // --- AJUSTE DE TÍTULO ---
+    // --- 2. MÚSICA ---
+    if (mMusic.openFromFile("assets/music/tus_ojos.ogg")) {
+        mMusic.setLoop(true);
+        mMusic.setVolume(40);
+        mMusic.play();
+    }
+
+    // --- 3. CARGA DE IMÁGENES (ASEGÚRATE QUE EL FORMATO .jpeg O .png SEA EL CORRECTO) ---
+    // Si tus archivos son .png, cambia ".jpeg" por ".png" en las líneas de abajo:
+    mMenuBackgroundTexture.loadFromFile("assets/Foto_Menu.jpeg");
+    mMenuBackgroundSprite.setTexture(mMenuBackgroundTexture);
+    mMenuBackgroundSprite.setScale(800.0f / mMenuBackgroundTexture.getSize().x, 600.0f / mMenuBackgroundTexture.getSize().y);
+
+    mGameBackgroundTexture.loadFromFile("assets/Fondo_Juego.jpeg");
+    mGameBackgroundSprite.setTexture(mGameBackgroundTexture);
+    mGameBackgroundSprite.setScale(800.0f / mGameBackgroundTexture.getSize().x, 600.0f / mGameBackgroundTexture.getSize().y);
+
+    mEnterNameTexture.loadFromFile("assets/Imagen1.jpeg");
+    mEnterNameSprite.setTexture(mEnterNameTexture);
+    mEnterNameSprite.setScale(800.0f / mEnterNameTexture.getSize().x, 600.0f / mEnterNameTexture.getSize().y);
+
+    mGameOverTexture.loadFromFile("assets/Game_Over.jpeg");
+    mGameOverSprite.setTexture(mGameOverTexture);
+    mGameOverSprite.setScale(800.0f / mGameOverTexture.getSize().x, 600.0f / mGameOverTexture.getSize().y);
+
+    // --- 4. CONFIGURACIÓN DE TEXTOS ---
     mTitleText.setFont(mFont);
-    mTitleText.setCharacterSize(45);
-    mTitleText.setFillColor(sf::Color::White);
     mTitleText.setOutlineColor(sf::Color::Black);
     mTitleText.setOutlineThickness(4);
-    mTitleText.setPosition(235, 215); // Posición en la pantalla verde [cite: 4, 5]
 
-    // --- 2. CARGA DE FONDOS ---
-    if (mMenuBackgroundTexture.loadFromFile("assets/Foto_Menu.jpeg")) {
-        mMenuBackgroundSprite.setTexture(mMenuBackgroundTexture);
-        sf::Vector2u size = mMenuBackgroundTexture.getSize();
-        mMenuBackgroundSprite.setScale(800.0f / size.x, 600.0f / size.y);
-        mMenuBackgroundSprite.setColor(sf::Color(220, 220, 220, 255));
-    }
-    if (mGameBackgroundTexture.loadFromFile("assets/Fondo_Juego.jpeg")) {
-        mGameBackgroundSprite.setTexture(mGameBackgroundTexture);
-        sf::Vector2u gameBgSize = mGameBackgroundTexture.getSize();
-        mGameBackgroundSprite.setScale(800.0f / gameBgSize.x, 600.0f / gameBgSize.y);
-    }
-    if (mEnterNameTexture.loadFromFile("assets/Imagen1.jpeg")) {
-        mEnterNameSprite.setTexture(mEnterNameTexture);
-        sf::Vector2u nameBgSize = mEnterNameTexture.getSize();
-        mEnterNameSprite.setScale(800.0f / nameBgSize.x, 600.0f / nameBgSize.y);
-        mEnterNameSprite.setColor(sf::Color(200, 200, 200, 255));
-    }
-    if (mGameOverTexture.loadFromFile("assets/Game_Over.jpeg")) {
-        mGameOverSprite.setTexture(mGameOverTexture);
-        sf::Vector2u overBgSize = mGameOverTexture.getSize();
-        mGameOverSprite.setScale(800.0f / overBgSize.x, 600.0f / overBgSize.y);
-    }
+    mHighScoreText.setFont(mFont);
+    mHighScoreText.setOutlineColor(sf::Color::Black);
+    mHighScoreText.setOutlineThickness(2);
 
-    // --- CONFIGURACIÓN DE TEXTOS SECUNDARIOS ---
     mInstructionsText.setFont(mFont);
-    mInstructionsText.setCharacterSize(18);
-    mInstructionsText.setFillColor(sf::Color::White);
     mInstructionsText.setOutlineColor(sf::Color::Black);
-    mInstructionsText.setOutlineThickness(2);
-    mInstructionsText.setPosition(240, 520); // Zona de controles [cite: 19]
+    mInstructionsText.setOutlineThickness(3);
 
     mScoreText.setFont(mFont);
-    mScoreText.setCharacterSize(22);
-    mScoreText.setFillColor(sf::Color(0, 255, 255));
+    mScoreText.setFillColor(sf::Color::Cyan);
     mScoreText.setOutlineColor(sf::Color::Black);
     mScoreText.setOutlineThickness(2);
     mScoreText.setPosition(15, 15);
 
-    mHighScoreText.setFont(mFont);
-    mHighScoreText.setCharacterSize(22);
-    mHighScoreText.setFillColor(sf::Color(255, 215, 0));
-    mHighScoreText.setOutlineColor(sf::Color::Black);
-    mHighScoreText.setOutlineThickness(2);
-    mHighScoreText.setPosition(280, 290); // Ranking en pantalla verde [cite: 20, 21]
-
     mTimePerFrame = sf::seconds(0.15f);
-
-    // --- CONFIGURACIÓN DE COMIDA ---
     mFood.setSize(sf::Vector2f(20, 20));
-    mFood.setFillColor(sf::Color::Cyan); // Color cian para contraste [cite: 22]
-    mFood.setOutlineColor(sf::Color(255, 255, 255));
-    mFood.setOutlineThickness(1);
+    mFood.setFillColor(sf::Color::Cyan); 
+    mFood.setOutlineColor(sf::Color::Black);
+    mFood.setOutlineThickness(2);
+
     spawnFood();
     loadScores();
 }
@@ -100,126 +87,128 @@ void Game::run() {
 void Game::processEvents() {
     sf::Event event;
     while (mWindow.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) mWindow.close();
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) mWindow.close();
-        if (mState == ENTER_NAME && event.type == sf::Event::TextEntered) {
-            if (event.text.unicode == 8) {
-                if (!mPlayerName.empty()) mPlayerName.pop_back();
-            } else if (event.text.unicode == 13) {
-                if (!mPlayerName.empty()) mState = PLAYING;
-            } else if (event.text.unicode < 128 && event.text.unicode > 31) {
-                if (mPlayerName.size() < 10) mPlayerName += static_cast<char>(event.text.unicode);
-            }
+        // 1. CERRAR VENTANA (Con la X o con ESC)
+        if (event.type == sf::Event::Closed) {
+            mWindow.close();
         }
+        
         if (event.type == sf::Event::KeyPressed) {
+            // Tecla ESC funciona en CUALQUIER momento para salir
+            if (event.key.code == sf::Keyboard::Escape) {
+                mWindow.close();
+            }
+
+            // Controles del Menú y Game Over
             if (mState == MENU && event.key.code == sf::Keyboard::Enter) {
                 mState = ENTER_NAME;
                 mPlayerName = "";
-            } else if (mState == GAME_OVER && event.key.code == sf::Keyboard::R) {
+            } 
+            else if (mState == GAME_OVER && event.key.code == sf::Keyboard::R) {
                 mSnake = Snake(20);
                 mScore = 0;
                 mTimePerFrame = sf::seconds(0.15f);
                 spawnFood();
                 mState = MENU;
+                if (mMusic.getStatus() != sf::Music::Playing) mMusic.play();
+            }
+        }
+
+        // 2. ESCRIBIR NOMBRE (Solo en estado ENTER_NAME)
+        if (mState == ENTER_NAME && event.type == sf::Event::TextEntered) {
+            if (event.text.unicode == 8) { // Borrar (Backspace)
+                if (!mPlayerName.empty()) mPlayerName.pop_back();
+            } else if (event.text.unicode == 13) { // Confirmar (Enter)
+                if (!mPlayerName.empty()) mState = PLAYING;
+            } else if (event.text.unicode < 128 && event.text.unicode > 31) {
+                if (mPlayerName.size() < 10) mPlayerName += static_cast<char>(event.text.unicode);
             }
         }
     }
-    if (mState == PLAYING) mSnake.handleInput();
+
+    // 3. MOVIMIENTO (Solo mientras juegas)
+    if (mState == PLAYING) {
+        mSnake.handleInput();
+    }
 }
 
 void Game::update(sf::Time deltaTime) {
     mSnake.update();
-    if (mSnake.checkCollision()) {
-        mState = GAME_OVER;
-        updateHighScores();
-        saveScore();
-    }
-    sf::Vector2i headPos = mSnake.getHeadPosition();
-    if (headPos.x * 20 == mFood.getPosition().x && headPos.y * 20 == mFood.getPosition().y) {
-        mSnake.grow();
-        spawnFood();
-        mScore += 10;
-        if (mTimePerFrame.asSeconds() > 0.05f) mTimePerFrame -= sf::seconds(0.005f);
+    if (mSnake.checkCollision()) { mState = GAME_OVER; updateHighScores(); saveScore(); }
+    if (mSnake.getHeadPosition().x * 20 == mFood.getPosition().x && mSnake.getHeadPosition().y * 20 == mFood.getPosition().y) {
+        mSnake.grow(); spawnFood(); mScore += 10;
     }
 }
 
 void Game::render() {
     mWindow.clear();
     if (mState == MENU) {
-        if (mMenuBackgroundSprite.getTexture()) mWindow.draw(mMenuBackgroundSprite);
-        mTitleText.setString("  SNAKE  GAME");
-        mTitleText.setCharacterSize(30);
-        mTitleText.setOutlineThickness(4);
-        mTitleText.setPosition(190, 215); // Forzar posición menú [cite: 44]
+        mWindow.draw(mMenuBackgroundSprite);
+        mTitleText.setString("SNAKE GAME");
+        mTitleText.setCharacterSize(35);
+        mTitleText.setPosition(245, 215); // Centrado en pantalla verde
         mWindow.draw(mTitleText);
-        std::string scoresStr = "TOP 3 JUGADORES:\n";
-        if(mHighScores.empty()) scoresStr += "Sin registros aun.\n";
-        for (const auto& entry : mHighScores) scoresStr += entry.name + ": " + std::to_string(entry.score) + "\n";
-        mHighScoreText.setString(scoresStr);
+
+        std::string s = "TOP 3 JUGADORES:\n";
+        for (const auto& e : mHighScores) s += e.name + ": " + std::to_string(e.score) + "\n";
+        mHighScoreText.setString(s);
         mHighScoreText.setCharacterSize(18);
-        mHighScoreText.setPosition(270, 280);
+        mHighScoreText.setFillColor(sf::Color::Yellow);
+        mHighScoreText.setPosition(275, 290);
         mWindow.draw(mHighScoreText);
+
         mInstructionsText.setString("Presiona ENTER para Jugar\n       ESC para Salir");
         mInstructionsText.setCharacterSize(16);
-        mInstructionsText.setPosition(150, 520);
+        mInstructionsText.setPosition(200, 520);
         mWindow.draw(mInstructionsText);
     } else if (mState == ENTER_NAME) {
-        if (mEnterNameSprite.getTexture()) mWindow.draw(mEnterNameSprite);
+        mWindow.draw(mEnterNameSprite);
         mTitleText.setString("Ingresa tu Nombre:");
         mTitleText.setCharacterSize(25);
-        mTitleText.setPosition(140, 80); // Arriba de las cabezas [cite: 54]
+        mTitleText.setPosition(190, 70);
         mWindow.draw(mTitleText);
         mInstructionsText.setString(mPlayerName + "_\n\n(ENTER para confirmar)");
-        mInstructionsText.setCharacterSize(18);
-        mInstructionsText.setPosition(200, 380); // Escudo Spider-Man [cite: 57]
+        mInstructionsText.setPosition(220, 380);
         mWindow.draw(mInstructionsText);
     } else if (mState == PLAYING) {
-        if (mGameBackgroundSprite.getTexture()) mWindow.draw(mGameBackgroundSprite);
+        mWindow.draw(mGameBackgroundSprite);
         mSnake.render(mWindow);
         mWindow.draw(mFood);
         mScoreText.setString("Puntos: " + std::to_string(mScore) + " | " + mPlayerName);
         mWindow.draw(mScoreText);
     } else if (mState == GAME_OVER) {
-        if (mGameOverSprite.getTexture()) mWindow.draw(mGameOverSprite);
+        mWindow.draw(mGameOverSprite);
         mTitleText.setString("GAME OVER");
-        mTitleText.setCharacterSize(50);
+        mTitleText.setCharacterSize(55);
         mTitleText.setFillColor(sf::Color::Red);
-        mTitleText.setPosition(220, 280); // Centro visual [cite: 65]
+        mTitleText.setPosition(220, 280);
         mWindow.draw(mTitleText);
-        mInstructionsText.setString("Puntaje Final: " + std::to_string(mScore) + "\n\n'R' para Menu\nESC para Salir");
+        mInstructionsText.setString("Puntaje Final: " + std::to_string(mScore) + "\n\n'R' para Menu - ESC para Salir");
+        mInstructionsText.setPosition(180, 420);
         mWindow.draw(mInstructionsText);
     }
     mWindow.display();
 }
 
-void Game::spawnFood() {
-    int x = rand() % (800 / 20);
-    int y = rand() % (600 / 20);
-    mFood.setPosition(x * 20, y * 20);
-}
-
-void Game::loadScores() {
+void Game::spawnFood() { mFood.setPosition((rand() % 40) * 20, (rand() % 30) * 20); }
+void Game::loadScores() { 
     mHighScores.clear();
-    std::ifstream file("scores.txt");
-    if (file.is_open()) {
-        std::string name;
-        int score;
-        while (file >> name >> score) mHighScores.push_back({name, score});
-        file.close();
+    std::ifstream f("scores.txt");
+    if (f.is_open()) {
+        std::string n; int sc;
+        while (f >> n >> sc) mHighScores.push_back({n, sc});
+        f.close();
     }
     std::sort(mHighScores.begin(), mHighScores.end(), [](const ScoreEntry& a, const ScoreEntry& b) { return a.score > b.score; });
 }
-
 void Game::updateHighScores() {
     mHighScores.push_back({mPlayerName, mScore});
     std::sort(mHighScores.begin(), mHighScores.end(), [](const ScoreEntry& a, const ScoreEntry& b) { return a.score > b.score; });
     if (mHighScores.size() > 3) mHighScores.resize(3);
 }
-
 void Game::saveScore() {
-    std::ofstream file("scores.txt");
-    if (file.is_open()) {
-        for (const auto& entry : mHighScores) file << entry.name << " " << entry.score << "\n";
-        file.close();
+    std::ofstream f("scores.txt"); 
+    if (f.is_open()) {
+        for (const auto& e : mHighScores) f << e.name << " " << e.score << "\n";
+        f.close();
     }
 }

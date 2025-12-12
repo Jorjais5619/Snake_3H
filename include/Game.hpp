@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp> // Indispensable para la música de Los Cafres
 #include <vector>
 #include <string>
 #include <fstream>
@@ -24,22 +25,28 @@ public:
     void run();
 
 private:
+    // Funciones principales
     void processEvents();
     void update(sf::Time deltaTime);
     void render();
     
-    // Funciones del sistema
+    // Funciones del sistema de puntuación y comida
     void loadScores();
     void saveScore();
     void updateHighScores();
     void spawnFood();
 
+    // Variables de control
     sf::RenderWindow mWindow;
     Snake mSnake;
-    
     GameState mState;
     sf::Time mTimePerFrame;
-    
+    int mScore;
+    std::string mPlayerName;
+
+    // Recursos de Audio
+    sf::Music mMusic; 
+
     // Recursos de Texto
     sf::Font mFont;
     sf::Text mTitleText;
@@ -47,23 +54,19 @@ private:
     sf::Text mInstructionsText;
     sf::Text mHighScoreText;
 
-    // --- IMÁGENES DE FONDO ---
-    sf::Texture mMenuBackgroundTexture;  // Menú Principal
+    // Recursos de Imagen (Texturas y Sprites)
+    sf::Texture mMenuBackgroundTexture;
     sf::Sprite mMenuBackgroundSprite;
 
-    sf::Texture mGameBackgroundTexture;  // Juego
+    sf::Texture mGameBackgroundTexture;
     sf::Sprite mGameBackgroundSprite;
 
-    sf::Texture mEnterNameTexture;       // NUEVO: Pantalla Ingresar Nombre (Imagen1.png)
+    sf::Texture mEnterNameTexture;
     sf::Sprite mEnterNameSprite;
 
-    sf::Texture mGameOverTexture;        // NUEVO: Pantalla Game Over (Game_Over.png)
+    sf::Texture mGameOverTexture;
     sf::Sprite mGameOverSprite;
-    
-    // Datos juego
-    int mScore;
-    std::string mPlayerName;
-    std::vector<ScoreEntry> mHighScores;
-    
+
     sf::RectangleShape mFood;
+    std::vector<ScoreEntry> mHighScores;
 };
