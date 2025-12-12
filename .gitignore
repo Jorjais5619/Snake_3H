@@ -1,0 +1,11 @@
+# Compilados y objetos
+bin/obj/
+*.o
+*.exe
+
+# Archivos de VS Code
+.vscode/
+
+# Archivos de sistema
+Thumbs.db
+.DS_Store
