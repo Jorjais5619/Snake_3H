@@ -22,7 +22,8 @@ Recolectar la mayor cantidad de manzanas (Cian) para crecer y aumentar tu puntaj
 * **Contraste de Color:** Manzana en color Cian Neón para máxima visibilidad sobre fondos de Batman y Spider-Man.
 
 ## 👥 Equipo
-* **Líder:** Emilio (@tu-usuario-github)
+* * Emiliano Soto Macias (@ItsEmilianoSM)
+* * Jorge Alberto Velazquez Ventura (@Jorjais5619)
 
 ## 🛠️ Tecnologías
 * **Lenguaje:** C++17
