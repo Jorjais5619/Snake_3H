@@ -1,4 +1,4 @@
-# 🐍 Snake Master: Arcade Edition
+# 🐍 Snake: Arcade Edition
 
 **Snake Master** es una reinterpretación del clásico juego de la serpiente, desarrollada en **C++ con SFML**. El juego está diseñado bajo una estética de cabina "Arcade" clásica, integrando elementos visuales de superhéroes y una banda sonora relajada de reggae.
 
