@@ -34,3 +34,9 @@ Recolectar la mayor cantidad de manzanas (Cian) para crecer y aumentar tu puntaj
 * **Música:** Los Cafres - Tus Ojos.
 * **Fuentes:** Arcade Font (TTF).
 * **Inspiración:** Juegos de consola de los años 80.
+---
+
+## ⚖️ Aviso Legal (Copyright Disclaimer)
+Este proyecto ha sido creado únicamente con **fines educativos y sin fines de lucro**. 
+* **Música:** "Tus Ojos" es propiedad de **Los Cafres**. No se pretende infringir los derechos de autor. Todos los derechos pertenecen a sus respectivos dueños.
+* **Imágenes:** Los personajes de Batman y Spider-Man son propiedad de **DC Comics** y **Marvel/Disney** respectivamente.
